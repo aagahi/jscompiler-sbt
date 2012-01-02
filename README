@@ -1,0 +1,6 @@
+jscompiler-sbt is a very simple sbt 0.11 plugin for web developer using coffeescript, dust and less.
+It simply watch the web folder in your src tree and compile all .coffee, .dust or .less file to the target folder.
+I decided to develop my own first plugin for sbt (so this is also a little bit a learning project) and have a up to date tools with a simple design allowing quick upgade/upgrade of the script compilers.
+
+Right now you need to clone and publish-local this project to be able to use it.
+
