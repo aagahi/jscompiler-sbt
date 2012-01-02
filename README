@@ -1,16 +1,17 @@
 Intro ====================================
-jscompiler-sbt is a very simple sbt 0.11.X plugin for web developers using coffeescript, dust and less.
-It simply watchs the "web" folder in your src tree and compile all .coffee, .dust or .less files write them in the target folder.
 
-I decided to develop my own first sbt plugin (yes this is a self-learning project) to have an up to date web dev tools with a simple design allowing quick upgade/upgrade of the script compilers.
+jscompiler-sbt is a very simple sbt 0.11.X plugin for web developers using coffeescript, dust and less.
+It simply watchs the "web" folder in your src tree, compiles all .coffee, .dust or .less files and write them in the target folder.
+
+I decided to develop my own first sbt plugin (yes this is also a self-learning project ;) ) to have an up to date web dev tool with a simple design allowing quick upgade/upgrade of the script compilers.
 So right know it supports coffeescript 1.2.0, less 1.1.5 and dust 0.3.0.
 
 
 
 Quick tutorial ===========================
 
-First you need to clone and publish-local this project to be able to use it (it is a little bit too early to publish it in a public repo).
 You need sbt (0.11+, I did not test it against 10 maybe it might work)
+First you have to clone and publish-local this project to be able to use it (it is a little bit too early to publish it in a public repo).
 
 > git clone git://github.com/aagahi/jscompiler-sbt.git
 > xsbt publish-local
@@ -34,6 +35,7 @@ Activate the compiler with the watcher:
 
 Now you can edit .coffee, .less, or .dust files in the folder
 ./src/main/web/
+(yeah I know it should be configurable, in fact is quiet easy to change the source folder from the source and republish this plugin, but don't ask me right now how to deal with sbt magic using setting right now...)
 
 It will be automatically compiled to  your target dir, for example:
 ./target/scala-2.9.1/resource_managed/main/
