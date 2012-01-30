@@ -1,4 +1,4 @@
-package jscompiler
+package ws.nexus.jscompiler
 
 import java.io.File
 import java.net.URL
@@ -10,7 +10,7 @@ import collection.mutable.{SynchronizedMap, HashMap}
 
 
 object JSCompiler {
-  private val jscache = new HashMap[URL, String] with SynchronizedMap[URL, String]
+  private val jscache = new HashMap[String, String] with SynchronizedMap[String, String]
 }
 
 class JSCompiler {
@@ -33,21 +33,28 @@ class JSCompiler {
     finally {
       Context.exit()
     }
-
   }
 
   private def fetchURL( url:URL, charset:Charset ) = {
-    jscache.getOrElseUpdate( url, {
+    jscache.getOrElseUpdate( url.toString, {
       io.Source.fromURL( url )(io.Codec(charset)).mkString
     })
   }
+  private def fetchResource( resource:String, charset:Charset ) = {
+    jscache.getOrElseUpdate( resource, {
+      val is = getClass().getResourceAsStream( resource )
+      io.Source.fromInputStream( is )(io.Codec(charset)).mkString
+    })
 
-  private def lessCompiler( sourceFile:File, charset:Charset ) = {
+  }
+
+  private def lessCompiler( sourceFile:File ) = {
     val prejs = """
 arguments = ['"""+sourceFile.getAbsolutePath+"""'];
 print = function() {};
 quit = function() {};
 writeFile = function() {};
+
 
 var compileLess = function(input) {
   var parser = new less.Parser();
@@ -60,25 +67,27 @@ var compileLess = function(input) {
 };
 """
     val url = new URL( "https://raw.github.com/cloudhead/less.js/master/dist/less-rhino-1.1.5.js")
-    val js = fetchURL( url, charset )
-    compile( prejs, js, "compileLess(scriptSource);", "less 1.1.5" ) _
+    val js = fetchURL( url, Charset.forName("utf-8") )
+    //val js = fetchResource("/less-rhino-1.2.1.js", Charset.forName("utf-8") )
+    
+    compile( prejs, js, "compileLess(scriptSource);", "less 1.2.1" ) _
   }
 
 
-  private def dustCompiler( sourceFile:File, charset:Charset ) = {
+  private def dustCompiler() = {
     val prejs = """
 var window = {};
 window.dust = {};
 """
     val url = new URL( "https://raw.github.com/akdubya/dustjs/master/dist/dust-full-0.3.0.js")
-    val js = fetchURL( url, charset )
+    val js = fetchURL( url, Charset.forName("utf-8") )
 
     compile( prejs, js, "window.dust.compile(scriptSource);", "dust 0.3.0" ) _
   }
 
-  private def coffeeCompiler( sourceFile:File, charset:Charset ) = {
+  private def coffeeCompiler() = {
     val url = new URL( "https://raw.github.com/jashkenas/coffee-script/master/extras/coffee-script.js" )
-    val js = fetchURL( url, charset )
+    val js = fetchURL( url, Charset.forName("utf-8") )
 
     compile( "", js, "CoffeeScript.compile(scriptSource);", "coffee last" ) _
   }
@@ -93,9 +102,9 @@ window.dust = {};
 
   private def fileCompiler( sourceFile:File, charset:Charset ) = {
      fileType( sourceFile ) match {
-      case Some( "less" ) => lessCompiler( sourceFile, charset )
-      case Some( "dust" ) => dustCompiler( sourceFile, charset )
-      case Some( "coffee" ) => coffeeCompiler( sourceFile, charset )
+      case Some( "less" ) => lessCompiler( sourceFile )
+      case Some( "dust" ) => dustCompiler()
+      case Some( "coffee" ) => coffeeCompiler()
       case _ => { s:String => s }
     }
   }

@@ -1,4 +1,4 @@
-package jscompiler
+package ws.nexus.jscompiler
 
 import java.nio.charset.Charset
 import java.io.File

@@ -21,12 +21,12 @@ Then in your project:
 
 - add in "./build.sbt" file:
 
-seq(jscompiler.JSCompilerPlugin.jsCompilerSettings: _*)
+seq(ws.nexus.jscompiler.JSCompilerPlugin.jsCompilerSettings: _*)
 
 
 - add in "./project/plugins.sbt" file:
 
-addSbtPlugin("jscompiler" % "jscompiler-sbt" % "0.0.1-SNAPSHOT")
+addSbtPlugin("ws.nexus" % "jscompiler-sbt" % "0.0.1-SNAPSHOT")
 
 
 Activate the compiler with the watcher:
